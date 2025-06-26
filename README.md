@@ -18,11 +18,14 @@ ClaudeAutoは、Claude Codeを使用した革新的なマルチエージェン�
 - **boss1**: チームリーダー・品質管理・自動再指示システム
 - **worker1-5**: 実行担当・worker間通信・ルール遵守
 
-### 🔄 4つの自動化システム
+### 🔄 7つの自動化システム
 1. **自動サイクルシステム** - 作業停滞を防ぐ継続的タスク配信
 2. **90%自動実装システム** - 本番リリース直前まで一気に実装
 3. **自動モデル切り替え** - タスク複雑度に応じた最適化
 4. **進捗トラッキング** - リアルタイム監視とレポート生成
+5. **未送信メッセージ監視** - テキストボックス滞留を自動検出・修復
+6. **高機能エージェント通信** - エラー監視・自動リトライ機能付き
+7. **セッション健康監視** - 全エージェント状態の総合監視・自動修復
 
 ### 🧠 AI判断による最適化
 - **Haiku**: 簡単なタスク（ドキュメント、設定等）→ 高速・低コスト
@@ -81,6 +84,9 @@ ClaudeAuto/
 ├── final-api-integration.sh    # 最終API統合
 ├── progress-tracker.sh         # 進捗トラッキング
 ├── start-communication.sh      # 通信ヘルパー
+├── auto-enter-monitor.sh       # 未送信メッセージ自動監視
+├── smart-agent-send.sh         # 高機能エージェント通信
+├── session-health-monitor.sh   # セッション健康監視
 ├── CLAUDE.md                   # システム全体設計
 ├── USER_GUIDE.md              # 完全ユーザーガイド
 ├── COMMUNICATION_GUIDE.md      # 通信ガイド
@@ -172,6 +178,47 @@ nano instructions/worker.md     # worker指示書
 - **コスト効率**: 自動モデル切り替えで最適化
 - **品質**: 史上最強システム基準
 
+## 🏥 監視システム
+
+### 自動監視・修復機能
+
+ClaudeAutoには3つの監視システムが統合されています：
+
+#### 1. 未送信メッセージ監視
+```bash
+# テキストボックスに残った未送信メッセージを自動検出・送信
+./auto-enter-monitor.sh myproject 15  # 15秒間隔で監視
+```
+
+#### 2. 高機能エージェント通信
+```bash
+# エラー監視・自動リトライ機能付きメッセージ送信
+./smart-agent-send.sh myproject president "指示内容" --priority high
+
+# リアルタイム通信監視ダッシュボード
+./smart-agent-send.sh --monitor
+
+# エラー分析レポート
+./smart-agent-send.sh --analyze today
+```
+
+#### 3. セッション健康監視
+```bash
+# 全エージェントの健康状態を総合監視・自動修復
+./session-health-monitor.sh myproject 20  # 20秒間隔で監視
+```
+
+### 監視の自動起動
+```bash
+# 環境起動時に監視システムも自動起動
+./setup.sh myproject
+./presidentsetup.sh myproject --auto-claude
+
+# 別ターミナルで監視システム起動
+./auto-enter-monitor.sh myproject &
+./session-health-monitor.sh myproject &
+```
+
 ## 🔧 トラブルシューティング
 
 ### よくある問題と解決方法
@@ -189,6 +236,24 @@ nano instructions/worker.md     # worker指示書
 3. **進捗が見えない**
    ```bash
    ./progress-tracker.sh myproject
+   ```
+
+4. **メッセージが送信されない**
+   ```bash
+   # 自動Enter監視を起動
+   ./auto-enter-monitor.sh myproject &
+   
+   # 手動でEnter送信確認
+   ./smart-agent-send.sh --health
+   ```
+
+5. **エージェントが応答しない**
+   ```bash
+   # セッション健康チェック
+   ./session-health-monitor.sh myproject 10
+   
+   # 通信エラー分析
+   ./smart-agent-send.sh --analyze week
    ```
 
 ## 📝 テンプレート使用例

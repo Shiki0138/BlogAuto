@@ -26,6 +26,11 @@
 - **動作**: 自動レポート生成、ETA計算
 - **活用**: 計画調整、品質管理
 
+### 5. 🏥 自動監視・修復システム
+- **未送信メッセージ監視**: テキストボックス滞留を15秒間隔で自動検出・修復
+- **高機能エージェント通信**: エラー監視・自動リトライ・分析ダッシュボード
+- **セッション健康監視**: 全エージェント状態の総合監視・自動修復
+
 ## 🚀 クイックスタート
 
 ### ステップ1: 環境準備
@@ -169,6 +174,97 @@ chmod +x *.sh
 3. 地図・位置情報API（Google Maps）
 4. プッシュ通知API（Firebase/OneSignal）
 5. 画像・ファイルストレージAPI（AWS S3/Cloudinary）
+
+## 🏥 監視・修復システム
+
+### `auto-enter-monitor.sh` - 未送信メッセージ監視
+
+**何をするか**: テキストボックスに残った未送信メッセージを自動検出・送信
+
+**使い方**:
+```bash
+# 15秒間隔で監視（推奨）
+./auto-enter-monitor.sh myproject 15
+
+# バックグラウンド実行
+./auto-enter-monitor.sh myproject 15 &
+```
+
+**検出・修復対象**:
+- 未送信メッセージ（Enterが押されていない状態）
+- エラー状態（Claude接続問題等）
+- プロンプト待ち状態の異常
+
+### `smart-agent-send.sh` - 高機能エージェント通信
+
+**何をするか**: エラー監視・自動リトライ機能付きメッセージ送信
+
+**基本使用法**:
+```bash
+# 基本送信
+./smart-agent-send.sh myproject president "指示内容"
+
+# 優先度設定
+./smart-agent-send.sh myproject boss1 "緊急指示" --priority high
+
+# タイムアウト設定
+./smart-agent-send.sh myproject worker1 "作業指示" --timeout 30
+```
+
+**監視・分析機能**:
+```bash
+# リアルタイム通信監視ダッシュボード
+./smart-agent-send.sh --monitor
+
+# エラー分析レポート
+./smart-agent-send.sh --analyze today
+./smart-agent-send.sh --analyze week
+
+# システムヘルスチェック
+./smart-agent-send.sh --health
+```
+
+### `session-health-monitor.sh` - セッション健康監視
+
+**何をするか**: 全エージェント状態の総合監視・自動修復
+
+**使い方**:
+```bash
+# 20秒間隔で健康監視（推奨）
+./session-health-monitor.sh myproject 20
+
+# バックグラウンド実行
+./session-health-monitor.sh myproject 20 &
+```
+
+**監視・修復対象**:
+- セッション・ペインの存在確認
+- Claude Codeの応答状態
+- 未送信メッセージの自動修復
+- エラー状態の自動回復
+- Claude更新時の自動対応
+
+**健康レポート**:
+- 健康度パーセンテージ表示
+- 問題エージェントの特定
+- 自動修復実行状況
+- 推奨アクション提示
+
+### 監視システムの統合起動
+
+**推奨起動パターン**:
+```bash
+# 1. 基本環境起動
+./setup.sh myproject
+./presidentsetup.sh myproject --auto-claude
+
+# 2. 監視システム起動（別ターミナル）
+./auto-enter-monitor.sh myproject 15 &
+./session-health-monitor.sh myproject 20 &
+
+# 3. 作業開始
+# PRESIDENTセッションで: あなたはpresidentです。指示書に従って
+```
 
 ## 🛠️ セットアップスクリプト
 
