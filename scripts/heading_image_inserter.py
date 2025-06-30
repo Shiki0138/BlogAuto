@@ -32,8 +32,8 @@ class HeadingImageInserter:
         lines = content.split('\n')
         
         for i, line in enumerate(lines):
-            # Markdown見出しを検出（## から #### まで）
-            match = re.match(r'^(#{2,4})\s+(.+)$', line)
+            # Markdown見出しを検出（## のみ）
+            match = re.match(r'^(#{2})\s+(.+)$', line)
             if match:
                 level = match.group(1)
                 text = match.group(2)
