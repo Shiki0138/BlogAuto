@@ -320,15 +320,24 @@ class WordPressPublisher:
             image_info = load_json_safely(str(image_info_path))
             
             featured_image_id = None
-            if image_info:
+            skip_image = os.getenv('SKIP_IMAGE_UPLOAD', 'false').lower() == 'true'
+            
+            if image_info and not skip_image:
                 image_path = image_info.get('filepath')
                 if image_path and Path(image_path).exists():
-                    featured_image_id = self.upload_image(image_path)
+                    try:
+                        featured_image_id = self.upload_image(image_path)
+                        if not featured_image_id:
+                            logger.warning("画像アップロードに失敗しました。画像なしで投稿を続行します")
+                    except Exception as e:
+                        logger.warning(f"画像アップロードエラー: {e}. 画像なしで投稿を続行します")
                 
-                # 画像クレジット追加
+                # 画像クレジット追加（画像アップロード失敗時でもクレジットは表示）
                 credit = image_info.get('credit', '')
-                if credit:
+                if credit and featured_image_id:  # 画像が正常にアップロードされた場合のみクレジット追加
                     html_content = self.add_image_credit(html_content, credit)
+            elif skip_image:
+                logger.info("画像アップロードをスキップします（SKIP_IMAGE_UPLOAD=true）")
             
             # 記事投稿
             post_id = self.create_post(

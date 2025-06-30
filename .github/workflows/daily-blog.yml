@@ -43,6 +43,7 @@ jobs:
           WP_STATUS: ${{ secrets.WP_STATUS || 'draft' }}
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          SKIP_IMAGE_UPLOAD: true
         continue-on-error: false
         
       - name: Upload artifacts on failure
