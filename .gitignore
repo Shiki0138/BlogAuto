@@ -60,4 +60,4 @@ development/development_log.txt
 
 # バックアップ
 backup/
-*.backup
+*.backup.DS_Store
