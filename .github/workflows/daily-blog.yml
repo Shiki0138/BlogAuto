@@ -1,0 +1,66 @@
+name: Daily Blog Automation
+
+on:
+  schedule:
+    - cron: '0 0 * * *'   # 09:00 JST (UTC 00:00)
+  workflow_dispatch:      # 手動実行を有効化
+
+jobs:
+  publish-blog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TZ: Asia/Tokyo
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Create output directory
+        run: mkdir -p output
+        
+      - name: Execute Daily Blog Pipeline
+        run: python scripts/pipeline_orchestrator.py daily --enable-api
+        env:
+          ENABLE_EXTERNAL_API: true
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}  # 有料のため非推奨
+          WP_USER: ${{ secrets.WP_USER }}
+          WP_APP_PASS: ${{ secrets.WP_APP_PASS }}
+          WP_SITE_URL: ${{ secrets.WP_SITE_URL }}
+          WP_STATUS: ${{ secrets.WP_STATUS || 'draft' }}
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        continue-on-error: false
+        
+      - name: Upload artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-logs-${{ github.run_number }}
+          path: |
+            output/
+            *.log
+          retention-days: 7
+          
+      - name: Archive successful output
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: blog-output-${{ github.run_number }}
+          path: output/
+          retention-days: 30

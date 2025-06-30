@@ -1,0 +1,39 @@
+{
+  "test_timestamp": "2025-06-30 00:07:22",
+  "test_suite": "comprehensive_integration_test_cycle6",
+  "tests": {
+    "full_pipeline_integration": {
+      "status": "passed",
+      "duration": 0.56,
+      "return_code": 0,
+      "output_lines": 2
+    },
+    "quality_check_integration": {
+      "status": "passed",
+      "duration": 0.9,
+      "return_code": 0
+    },
+    "youtube_extension_integration": {
+      "status": "passed",
+      "duration": 0.07,
+      "return_code": 0
+    },
+    "analytics_feedback_integration": {
+      "status": "passed",
+      "duration": 0.09,
+      "return_code": 0
+    },
+    "end_to_end_integration": {
+      "status": "passed",
+      "duration": 0.53,
+      "return_code": 0
+    }
+  },
+  "summary": {
+    "total_tests": 5,
+    "passed_tests": 5,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "overall_status": "passed"
+  }
+}

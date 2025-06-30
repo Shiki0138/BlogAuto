@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+VENV/
+.venv
+
+# 環境変数
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# テスト・カバレッジ
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.coverage
+.cache
+
+# ログ・出力
+logs/
+*.log
+output/*
+!output/.gitkeep
+
+# 一時ファイル
+tmp/
+temp/
+*.tmp
+*.bak
+
+# ビルド成果物
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# プロジェクト固有
+.env_*
+!.env.example
+development/development_log.txt
+*.done.txt
+
+# GitHub Actions
+.github/workflows/test-*.yml
+
+# バックアップ
+backup/
+*.backup
