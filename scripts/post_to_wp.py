@@ -87,6 +87,12 @@ class WordPressPublisher:
             )
 
     # ───────────────────── Markdown → HTML ─────────────────────
+    def replace_image_placeholders(self, content: str, uploaded_images: dict) -> str:
+        """画像プレースホルダーを実際のURLに置換"""
+        for placeholder, url in uploaded_images.items():
+            content = content.replace(placeholder, url)
+        return content
+    
     def md_to_html(self, md_text: str) -> str:
         try:
             import markdown
@@ -165,6 +171,28 @@ class WordPressPublisher:
             return False
 
         md_text = md_path.read_text("utf-8")
+        
+        # 見出し画像情報を読み込み
+        heading_images_info = load_json_safely("output/heading_images.json") or {}
+        uploaded_images = {}
+        
+        # 見出し画像をアップロード（オプション）
+        if heading_images_info.get('images') and not self.mock:
+            for idx, img_info in enumerate(heading_images_info['images']):
+                if img_info.get('filepath'):
+                    img_path = Path(img_info['filepath'])
+                    if img_path.exists():
+                        img_id = self.upload_image(img_path)
+                        if img_id:
+                            # プレースホルダーとURLのマッピングを作成
+                            placeholder = f"{{IMAGE_URL_PLACEHOLDER_{img_path.name}}}"
+                            img_url = f"{self.wp_url.rstrip('/')}/wp-content/uploads/{img_path.name}"
+                            uploaded_images[placeholder] = img_url
+        
+        # プレースホルダーを実際のURLに置換
+        if uploaded_images:
+            md_text = self.replace_image_placeholders(md_text, uploaded_images)
+        
         html = self.md_to_html(md_text)
         meta = load_json_safely(str(meta_path)) or {}
 

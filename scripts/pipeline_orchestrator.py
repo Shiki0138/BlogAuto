@@ -153,6 +153,17 @@ class PipelineOrchestrator:
             if not success2:
                 logger.warning("画像取得に失敗しましたが、処理を続行します")
             
+            # ステージ2.5: 見出し画像挿入（オプション）
+            if os.path.exists("scripts/heading_image_inserter.py"):
+                success_heading = self.execute_stage(
+                    stage_name="heading_images",
+                    script_path="scripts/heading_image_inserter.py",
+                    required_files=["output/article.md"],
+                    output_files=["output/heading_images.json"]
+                )
+                if not success_heading:
+                    logger.warning("見出し画像挿入に失敗しましたが、処理を続行します")
+            
             # ステージ3: WordPress投稿
             success3 = self.execute_stage(
                 stage_name="wordpress_posting",
