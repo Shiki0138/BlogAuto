@@ -43,35 +43,65 @@ class HeadingImageInserter:
     
     def generate_image_query(self, heading_text: str, article_theme: str) -> str:
         """見出しテキストから画像検索クエリを生成"""
-        # 美容師関連のキーワードマッピング
+        # 美容技術関連のキーワードマッピング
         keyword_map = {
-            "心理学": "psychology business beauty salon",
-            "Instagram": "instagram marketing beauty salon social media",
-            "顧客": "customer service beauty salon client",
-            "集客": "business marketing beauty salon",
-            "プロスペクト理論": "behavioral economics business",
-            "アンカリング": "pricing strategy business",
-            "返報性": "reciprocity marketing relationship",
-            "ペルソナ": "target audience analysis marketing",
-            "リピート": "customer retention loyalty",
-            "事例": "success story case study",
-            "テクニック": "professional technique skill",
-            "トレンド": "trend innovation modern"
+            # ヘアスタイル関連
+            "ヘアアレンジ": "hair arrangement hairstyle updo",
+            "夏祭り": "summer festival hairstyle yukata hair",
+            "海水浴": "beach hairstyle summer hair waterproof",
+            "浴衣": "yukata hairstyle japanese traditional",
+            "編み込み": "braided hairstyle braid hair",
+            "アップ": "updo hairstyle elegant hair",
+            "ボブ": "bob hairstyle short hair",
+            "カラー": "hair color dyeing salon",
+            "パーマ": "perm hairstyle curly hair",
+            "トリートメント": "hair treatment salon care",
+            "ヘアケア": "hair care treatment salon",
+            
+            # 季節・イベント関連
+            "春": "spring hairstyle fresh flowers",
+            "夏": "summer hairstyle beach festival",
+            "秋": "autumn hairstyle fall colors",
+            "冬": "winter hairstyle cozy elegant",
+            "成人式": "coming of age ceremony hairstyle",
+            "結婚式": "wedding hairstyle bridal hair",
+            "卒業式": "graduation ceremony hairstyle",
+            
+            # ビジネス関連
+            "心理学": "salon customer psychology service",
+            "Instagram": "instagram beauty salon social media",
+            "顧客": "salon customer service beauty",
+            "集客": "salon marketing business strategy",
+            "技術": "hairstyling technique professional",
+            "トレンド": "hair trend 2024 modern style",
+            "事例": "hair salon success story",
+            "価格": "salon pricing menu beauty"
         }
         
-        # クエリ生成
-        query = "beauty salon professional"
+        # デフォルトクエリを技術的なものに
+        query = "professional hairstylist salon work"
         
+        # 最も関連性の高いキーワードを探す
         for keyword, eng_query in keyword_map.items():
             if keyword in heading_text:
                 query = eng_query
+                # 複数のキーワードがマッチする場合は組み合わせる
+                for other_keyword, other_query in keyword_map.items():
+                    if other_keyword != keyword and other_keyword in heading_text:
+                        query = f"{eng_query} {other_query.split()[0]}"
+                        break
                 break
         
-        # テーマに基づく追加
-        if "AI" in article_theme or "テクノロジー" in article_theme:
-            query += " technology digital"
-        elif "マーケティング" in article_theme:
-            query += " marketing strategy"
+        # テーマに基づく追加（より具体的に）
+        if "ヘアアレンジ" in article_theme:
+            if "夏" in article_theme or "海" in article_theme:
+                query += " summer beach waterproof"
+            elif "祭" in article_theme:
+                query += " festival traditional japanese"
+        elif "カラー" in article_theme:
+            query += " hair color chart salon"
+        elif "AI" in article_theme or "テクノロジー" in article_theme:
+            query += " technology digital innovation"
             
         return query
     
