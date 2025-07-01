@@ -75,17 +75,14 @@ class WordPressPublisher:
             )
 
     # ───────────────────────── Helper ──────────────────────────
-    def _preflight(self) -> None:
-        """GET /posts で 200 を確認。失敗時は例外"""
-        if self.mock:
-            return
-        url = f"{self.wp_url.rstrip('/')}/wp-json/wp/v2/posts?per_page=1"
-        r = self.session.get(url, timeout=self.TIMEOUT)
-        if r.status_code != 200:
-            raise RuntimeError(
-                f"Preflight REST check failed ({r.status_code}) — Secrets/WAF を確認してください"
-            )
-
+def _preflight(self) -> None:
+    if self.mock:
+        return
+    url = f"{self.wp_url.rstrip('/')}/wp-json/wp/v2/users/me"
+    r = self.session.get(url, timeout=self.TIMEOUT)
+    if r.status_code != 200:
+        raise RuntimeError(f"Preflight failed {r.status_code}")
+        
     # ───────────────────── Markdown → HTML ─────────────────────
     def replace_image_placeholders(self, content: str, uploaded_images: dict) -> str:
         """画像プレースホルダーを実際のURLに置換"""
