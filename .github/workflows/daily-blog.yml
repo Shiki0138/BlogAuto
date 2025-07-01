@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: '0 0 * * *'   # 09:00 JST (UTC 00:00)
   workflow_dispatch:      # 手動実行を有効化
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/**'
+      - '.github/workflows/**'
 
 jobs:
   publish-blog:
@@ -30,6 +36,17 @@ jobs:
       - name: Create output directory
         run: mkdir -p output
         
+      - name: Debug Environment Variables
+        run: |
+          echo "Checking environment variables..."
+          echo "ENABLE_EXTERNAL_API: $ENABLE_EXTERNAL_API"
+          echo "WP_USER is set: ${{ secrets.WP_USER != '' }}"
+          echo "WP_APP_PASS is set: ${{ secrets.WP_APP_PASS != '' }}"
+          echo "WP_SITE_URL is set: ${{ secrets.WP_SITE_URL != '' }}"
+          echo "GEMINI_API_KEY is set: ${{ secrets.GEMINI_API_KEY != '' }}"
+        env:
+          ENABLE_EXTERNAL_API: true
+          
       - name: Execute Daily Blog Pipeline
         run: python scripts/pipeline_orchestrator.py daily --enable-api
         env:
