@@ -46,9 +46,9 @@ class WordPressPublisher:
         # 環境変数読み込み
         #   ※ GitHub / Vercel の Secrets と合わせる
         # ───────────────────────────────────────────
-        self.wp_user = get_env_var("WP_USERNAME", required=False)
-        self.wp_pass = get_env_var("WP_APP_PASSWORD", required=False)
-        self.wp_url = get_env_var("WP_BASE_URL", required=False)  # 末尾スラッシュ不要
+        self.wp_user = get_env_var("WP_USER", required=False)
+        self.wp_pass = get_env_var("WP_APP_PASS", required=False)
+        self.wp_url = get_env_var("WP_SITE_URL", required=False)  # 末尾スラッシュ不要
 
         self.auto_publish = os.getenv("AUTO_PUBLISH", "false").lower() == "true"
         self.enable_api = os.getenv("ENABLE_EXTERNAL_API", "false").lower() == "true"
