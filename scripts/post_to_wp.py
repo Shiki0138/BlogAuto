@@ -76,14 +76,15 @@ class WordPressPublisher:
 
     # ───────────────────────── Helper ──────────────────────────
 def _preflight(self) -> None:
+    """確認用に /users/me を叩く — Author でも必ず 200 OK"""
     if self.mock:
         return
     url = f"{self.wp_url.rstrip('/')}/wp-json/wp/v2/users/me"
     r = self.session.get(url, timeout=self.TIMEOUT)
     if r.status_code != 200:
-        raise RuntimeError(f"Preflight failed {r.status_code}")
+        raise RuntimeError(f"Preflight failed ({r.status_code})")
         
-    # ───────────────────── Markdown → HTML ─────────────────────
+          # ───────────────────── Markdown → HTML ─────────────────────
     def replace_image_placeholders(self, content: str, uploaded_images: dict) -> str:
         """画像プレースホルダーを実際のURLに置換"""
         for placeholder, url in uploaded_images.items():
